@@ -40,4 +40,5 @@
     <string name="logout">התנתקות</string>
     <string name="chats">צ\'אטים</string>
     <string name="settings">הגדרות</string>
+    <string name="no_chats">כרגע אין שום צ\'אטים להראות,\nלחץ על כפתור הפלוס בכדי להוסיף צ\'אט חדש.</string>
 </resources>

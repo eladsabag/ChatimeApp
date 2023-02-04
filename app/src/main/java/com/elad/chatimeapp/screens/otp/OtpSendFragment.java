@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,7 @@ import com.elad.chatimeapp.databinding.FragmentOtpSendBinding;
 import com.elad.chatimeapp.dialogs.ErrorDialogFragment;
 import com.elad.chatimeapp.dialogs.LoadingDialogFragment;
 import com.elad.chatimeapp.dialogs.SendPhoneDialogFragment;
+import com.elad.chatimeapp.utils.Validation;
 import com.google.firebase.auth.PhoneAuthCredential;
 
 public class OtpSendFragment extends Fragment {
@@ -45,6 +48,15 @@ public class OtpSendFragment extends Fragment {
             loadingDialogFragment.dismiss();
             new ErrorDialogFragment(errorMessage).show(getChildFragmentManager(), ErrorDialogFragment.TAG);
         }
+    };
+    private final TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+        @Override
+        public void afterTextChanged(Editable s) { setCbxEnable(binding.sendCbxAgree.isChecked(), s.toString()); }
     };
 
     @Override
@@ -72,8 +84,9 @@ public class OtpSendFragment extends Fragment {
         binding.setText(getString(R.string.agree_terms_and_policy));
         binding.setSubtext(getResources().getStringArray(R.array.agree_terms_and_policy_subtext));
         binding.setIsOrientationPortrait(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
+        binding.sendEditPhone.addTextChangedListener(textWatcher);
         binding.sendBtnOk.setOnClickListener(v -> onOkClicked());
-        binding.sendCbxAgree.setOnCheckedChangeListener((buttonView, isChecked) -> binding.sendBtnOk.setEnabled(isChecked));
+        binding.sendCbxAgree.setOnCheckedChangeListener((buttonView, isChecked) -> setCbxEnable(isChecked, binding.sendEditPhone.getText().toString()));
     }
 
     private void onOkClicked() {
@@ -84,5 +97,11 @@ public class OtpSendFragment extends Fragment {
             loadingDialogFragment.show(getChildFragmentManager(), LoadingDialogFragment.TAG);
             viewModel.sendCode(fullPhoneNumber, requireActivity());
         }).show(getChildFragmentManager(), SendPhoneDialogFragment.TAG);
+    }
+
+    private void setCbxEnable(boolean isChecked, String phoneNumberWithOutCountryCode) {
+        String countryCode = binding.sendSpnCcp.getSelectedCountryCodeWithPlus();
+        String fullPhoneNumber = String.format("%s%s",countryCode, phoneNumberWithOutCountryCode);
+        binding.sendBtnOk.setEnabled(isChecked && Validation.isPhoneNumberValid(fullPhoneNumber));
     }
 }

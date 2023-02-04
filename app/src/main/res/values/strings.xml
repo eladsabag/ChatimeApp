@@ -43,10 +43,9 @@
     <string name="name_required">Name is required field</string>
     <string name="gender_required">Gender is required field</string>
     <string name="status_required">Status is required field</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="manage_notifications">Manage notifications</string>
     <string name="logout">Logout</string>
     <string name="chats">Chats</string>
     <string name="settings">Settings</string>
+    <string name="no_chats">Currently there is no chats to show.\nTap the plus button to add new chat.</string>
 </resources>
