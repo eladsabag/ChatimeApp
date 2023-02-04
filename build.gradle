@@ -1,0 +1,20 @@
+buildscript {
+    ext {
+        hilt_version = '2.44'
+        room_version = '2.4.3'
+    }
+    dependencies {
+        // Kotlin
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.21'
+        // Hilt-Dagger
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.44'
+        // Google Services
+        classpath 'com.google.gms:google-services:4.3.15'
+        // Firebase
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
+    }
+}// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    id 'com.android.application' version '7.4.0' apply false
+    id 'com.android.library' version '7.4.0' apply false
+}

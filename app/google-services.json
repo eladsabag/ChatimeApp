@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1011611362220",
+    "project_id": "chatime-54e85",
+    "storage_bucket": "chatime-54e85.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1011611362220:android:400013075ced85e3d71009",
+        "android_client_info": {
+          "package_name": "com.elad.chatimeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1011611362220-nqs5qflietacg7v4rnor46tg5na8qpqf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.elad.chatimeapp",
+            "certificate_hash": "6b51e8197fad8475549cadc76849388e9871ed6b"
+          }
+        },
+        {
+          "client_id": "1011611362220-9s9f7smt7jj56o6euvg1lj33m8cjs1rb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOYXLtKafrpE1T613Q9OwLJoKEaDyXxog"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1011611362220-9s9f7smt7jj56o6euvg1lj33m8cjs1rb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

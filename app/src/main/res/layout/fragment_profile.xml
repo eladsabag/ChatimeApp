@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".screens.profile.ProfileFragment">
+
+    <data>
+        <variable
+            name="model"
+            type="com.elad.chatimeapp.model.User" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="24dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/profile_lay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="128dp">
+
+                <ImageView
+                    android:id="@+id/profile_img"
+                    android:layout_width="256dp"
+                    android:layout_height="256dp"
+                    app:profileImage="@{model.profileImage}"
+                    android:scaleType="centerCrop"
+                    tools:src="@drawable/male"
+                    android:contentDescription="@string/app_name" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/profile_lay_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="?attr/textInputOutlinedDenseStyle"
+                android:paddingVertical="8dp"
+                android:hint="@string/name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/profile_edt_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:text="@{model.name}"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/profile_lay_gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:paddingVertical="8dp"
+                android:hint="@string/gender">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/profile_edt_gender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:simpleItems="@array/genders"
+                    app:text="@{model.gender}"
+                    app:filter="@{false}"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/profile_lay_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:paddingVertical="8dp"
+                android:hint="@string/status">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/profile_edt_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:simpleItems="@array/status_types"
+                    app:text="@{model.status}"
+                    app:filter="@{false}"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/profile_btn_next"
+            android:layout_width="256dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:text="@string/next" />
+    </RelativeLayout>
+</layout>

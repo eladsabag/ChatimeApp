@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Chatime</string>
+    <string name="enter_phone_number">הזן מספר פלאפון</string>
+    <string name="enter_phone_number_description">צ\'אטיים צריך לאמת את הפלאפון שלך על מנת להמשיך.</string>
+    <string name="enter_phone_number_hint">050–123–4567</string>
+    <string name="ok">אישור</string>
+    <string name="cancel">ביטול</string>
+    <string name="phone_number_dialog_message">זה מספר הפלאפון שנבחר לאימות: %s\nתרצה להמשיך?</string>
+    <string name="phone_number_dialog_title">מספר פלאפון</string>
+    <string name="close">סגור</string>
+    <string name="agree_terms_and_policy">אנא קראו את מדיניות הפרטיות שלנו וסמנו את התיבה כדי לאשר את תנאי השימוש.</string>
+    <string name="verifying_your_phone_number">אימות מספר הפלאפון שלך</string>
+    <string name="enter_code_description">הזן קוד 6 ספרות</string>
+    <string name="code_hint">111–111</string>
+    <string name="send_code">שלח קוד</string>
+    <string name="resend_code_text">שלח קוד שוב בעוד %s שניות</string>
+    <string name="invalid_request">הבקשה עבור מספר הפלאפון הינה שגויה, אנא נסה שוב.</string>
+    <string name="too_many_requests">יותר מדי בקשות עבור מספר הפלאפון, אנא נסה שוב מאוחר יותר.</string>
+    <string name="general_request_error">מספר הפלאפון שהוזן הינו שגוי, אנא נסה שוב.</string>
+    <string name="code_invalid">הקוד שהזנת הינו שגוי, אנא נסה שוב.</string>
+    <string name="firebase_network_error">הרשת כבויה, אנא הפעל את הרשת שלך ונסה שוב.</string>
+    <string name="general_code_error">שגיאה התרחשה, אנא וודא שהקוד שהזנת תקין ונסה שוב מאוחר יותר.</string>
+    <string-array name="agree_terms_and_policy_subtext">
+        <item>מדיניות הפרטיות</item>
+        <item>תנאי השימוש</item>
+    </string-array>
+    <string name="next">הבא</string>
+    <string name="name">Name</string>
+    <string name="gender">Gender</string>
+    <string name="status">Status</string>
+    <string name="camera_permission_title">הרשאות מצלמה דרושות</string>
+    <string name="storage_permissions_title">הרשאות אחסון דרושות</string>
+    <string name="camera_permission_message">על מנת לצלם תמונה בעזרת המצלמה, יש צורך אישור שלך עבור ההרשאה הזו.</string>
+    <string name="storage_permissions_message">על מנת לבחור תמונות מהגלריה, האישור שלך עבור ההרשאות האלו.</string>
+    <string name="name_required">שם זה שדה דרוש</string>
+    <string name="gender_required">מין זה שדה דרוש</string>
+    <string name="status_required">סטטוס זה שדה דרוש</string>
+    <string name="manage_notifications">ניהול התראות</string>
+    <string name="logout">התנתקות</string>
+    <string name="chats">צ\'אטים</string>
+    <string name="settings">הגדרות</string>
+</resources>
