@@ -3,20 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".screens.main.tabs_fragments.ChatsFragment">
+    tools:context=".screens.main.tabs_fragments.chats.ChatsFragment">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="model"
+            type="com.elad.chatimeapp.model.User" />
+    </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chats_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/chat_list_item"
+            android:visibility="@{model.chats.size() > 0 ? View.VISIBLE : View.INVISIBLE}"
+            android:layout_marginBottom="96dp" />
+
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/no_chats"
-            android:textSize="18sp"
-            android:textAlignment="center"
             android:layout_centerInParent="true"
-            />
+            android:text="@string/no_chats"
+            android:textAlignment="center"
+            android:visibility="@{model.chats.size() == 0 ? View.VISIBLE : View.INVISIBLE}"
+            android:textSize="18sp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/chats_btn_add"

@@ -9,20 +9,20 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.elad.chatimeapp.R;
+import com.elad.chatimeapp.screens.SharedViewModel;
 
 public class SplashFragment extends Fragment {
-    private SplashViewModel viewModel;
+    private SharedViewModel viewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(requireActivity()).get(SplashViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
     }
 
     @Override
@@ -37,6 +37,5 @@ public class SplashFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         NavController navController = Navigation.findNavController(view);
         viewModel.handleNavigation(navController);
-//        navController.navigate(R.id.profile_dest);
     }
 }

@@ -39,7 +39,7 @@ public class ProfileViewModel extends ViewModel {
         this.userMutableLiveData = new MutableLiveData<>();
         this.user = new User();
         if (mAuth.getCurrentUser() != null) {
-            repository.getUser(onUserDataChangedListener, mAuth.getUid());
+            repository.getUser(mAuth.getUid(), onUserDataChangedListener);
         }
     }
 

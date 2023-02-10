@@ -1,4 +1,4 @@
-package com.elad.chatimeapp.screens.main.tabs_fragments;
+package com.elad.chatimeapp.screens.main.tabs_fragments.settings;
 
 import static com.elad.chatimeapp.utils.Constants.NOTIFICATION_ON;
 
@@ -37,6 +37,7 @@ public class SettingsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
+        binding.setModel(viewModel.getUser());
         return binding.getRoot();
     }
 
@@ -45,11 +46,6 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
         initViews();
-        viewModel.getUserMutableLiveData().observe(getViewLifecycleOwner(), user -> {
-            if (user != null) {
-                binding.setModel(user);
-            }
-        });
     }
 
     private void initViews() {

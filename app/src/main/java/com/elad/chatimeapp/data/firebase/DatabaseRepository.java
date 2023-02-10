@@ -13,6 +13,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 
 /**
@@ -21,6 +23,8 @@ import javax.inject.Inject;
  */
 public class DatabaseRepository {
     private static final String TAG = "DatabaseRepository";
+    private static final String USERS_NODE = "users";
+    private static final String CHATS_NODE = "chats";
     private final FirebaseDatabase mDatabase;
 
     @Inject
@@ -37,14 +41,14 @@ public class DatabaseRepository {
     }
 
     public void addChat(Chat chat, String uid) {
-        mDatabase.getReference("chats").child(uid).push().setValue(chat);
+        mDatabase.getReference("users").child(uid).child("chats").child(chat.getId()).setValue(chat);
     }
 
     public void deleteChat(String chatId, String uid) {
-        mDatabase.getReference("chats").child(uid).child(chatId).removeValue();
+        mDatabase.getReference("users").child(uid).child("chats").child(chatId).removeValue();
     }
 
-    public void getUser(final OnUserDataChangedListener listener, String uid) {
+    public void getUser(String uid, final OnUserDataChangedListener listener) {
         mDatabase.getReference("users").child(uid)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -60,6 +64,25 @@ public class DatabaseRepository {
                 Log.d(TAG, "The read failed: " + databaseError.getCode());
                 if (listener != null)
                     listener.onError(databaseError.toException());
+            }
+        });
+    }
+
+    public void getChatsForUser(String userId, final OnChatsRetrievedListener listener) {;
+        mDatabase.getReference(USERS_NODE).child(userId).child(CHATS_NODE).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<Chat> chats = new ArrayList<>();
+                for (DataSnapshot chatSnapshot : dataSnapshot.getChildren()) {
+                    Chat chat = chatSnapshot.getValue(Chat.class);
+                    chats.add(chat);
+                }
+                listener.onChatsRetrieved(chats);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                listener.onError(databaseError.getMessage());
             }
         });
     }
@@ -83,7 +106,7 @@ public class DatabaseRepository {
     }
 
     public void listenForChatUpdates(final OnChatDataChangedListener listener, String uid) {
-        mDatabase.getReference("chats").child(uid)
+        mDatabase.getReference("users").child(uid).child("chats")
                 .addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -133,5 +156,10 @@ public class DatabaseRepository {
         void onChatRemoved(Chat chat);
 
         void onError(Exception e);
+    }
+
+    public interface OnChatsRetrievedListener {
+        void onChatsRetrieved(ArrayList<Chat> chats);
+        void onError(String errorMessage);
     }
 }
