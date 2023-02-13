@@ -10,4 +10,5 @@
     <color name="primaryColor">#FFFAAC28</color>
     <color name="primaryVariantColor">#FFE26713</color>
     <color name="thirdColor">#FFFFBF3F</color>
+    <color name="greyColor">#B5B4B3</color>
 </resources>

@@ -56,6 +56,14 @@ public class ChatsFragment extends Fragment {
                 }
             }
     );
+    private final ChatsAdapter.CallbackChat callbackChat = new ChatsAdapter.CallbackChat() {
+        @Override
+        public void OnChatClicked(Chat chat) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("chat", chat);
+            navController.navigate(R.id.action_main_dest_to_conversation_dest, bundle);
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,7 +84,7 @@ public class ChatsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
         chatsList = new ArrayList<>(viewModel.getUser().getChats().values());
-        adapter = new ChatsAdapter(chatsList, viewModel);
+        adapter = new ChatsAdapter(chatsList, callbackChat);
         initViews();
     }
 
@@ -168,7 +176,7 @@ public class ChatsFragment extends Fragment {
         FirebaseUser currentUser = viewModel.getmAuth().getCurrentUser();
         // TODO prevent duplicate chats
         if (currentUser != null) {
-            Chat chat = new Chat(ChatIdGenerator.generateChatId(currentUser.getPhoneNumber(), phoneNumber),contactName, "" ,"");
+            Chat chat = new Chat(ChatIdGenerator.generateChatId(currentUser.getPhoneNumber(), phoneNumber),contactName, "" ,"", new ArrayList<>());
             viewModel.addChatToUser(chat, currentUser.getUid());
             adapter.addChat(chat);
         }

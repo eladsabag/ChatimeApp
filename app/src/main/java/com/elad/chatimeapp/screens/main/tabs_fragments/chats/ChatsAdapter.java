@@ -19,11 +19,15 @@ import java.util.ArrayList;
  */
 public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.MyViewHolder> {
     private ArrayList<Chat> chatsList;
-    private MainViewModel viewModel;
+    private CallbackChat callbackChat;
 
-    public ChatsAdapter(ArrayList<Chat> chatsList, MainViewModel viewModel) {
+    public ChatsAdapter(ArrayList<Chat> chatsList, CallbackChat callbackChat) {
         this.chatsList = chatsList;
-        this.viewModel = viewModel;
+        this.callbackChat = callbackChat;
+    }
+
+    public interface CallbackChat {
+        void OnChatClicked(Chat chat);
     }
 
     @NonNull
@@ -35,7 +39,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ChatsAdapter.MyViewHolder holder, int position) {
-        holder.bind(chatsList.get(position), viewModel);
+        holder.bind(chatsList.get(position), callbackChat);
     }
 
     @Override
@@ -61,9 +65,12 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.MyViewHolder
             this.binding = binding;
         }
 
-        public void bind(Chat chat, MainViewModel viewModel) {
+        public void bind(Chat chat, CallbackChat callbackChat) {
             binding.setModel(chat);
-//            binding.contactChatContainer.setOnLongClickListener(v -> viewModel.deleteChat(chat));
+            binding.contactChatContainer.setOnClickListener(v -> {
+                if (callbackChat != null)
+                    callbackChat.OnChatClicked(chat);
+            });
         }
     }
 }

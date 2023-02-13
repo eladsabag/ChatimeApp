@@ -1,22 +1,27 @@
 package com.elad.chatimeapp.model;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
 /**
  * @author - Elad Sabag
  * @date - 1/27/2023
  */
-public class Chat {
+public class Chat implements Serializable {
     private String id;
     private String name;
     private String date;
     private String profileImage;
+    private ArrayList<Message> messages;
 
     public Chat() {}
 
-    public Chat(String id, String name, String date, String profileImage) {
+    public Chat(String id, String name, String date, String profileImage, ArrayList<Message> messages) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.profileImage = profileImage;
+        this.messages = messages;
     }
 
     public String getId() {
@@ -49,6 +54,14 @@ public class Chat {
 
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public ArrayList<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(ArrayList<Message> messages) {
+        this.messages = messages;
     }
 
     @Override
