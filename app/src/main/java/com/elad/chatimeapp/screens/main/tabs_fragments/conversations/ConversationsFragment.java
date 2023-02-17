@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -31,6 +30,7 @@ import com.elad.chatimeapp.R;
 import com.elad.chatimeapp.databinding.FragmentConversationsBinding;
 import com.elad.chatimeapp.dialogs.PermissionDialogFragment;
 import com.elad.chatimeapp.model.Chat;
+import com.elad.chatimeapp.model.User;
 import com.elad.chatimeapp.screens.main.MainViewModel;
 import com.elad.chatimeapp.utils.ChatIdGenerator;
 import com.elad.chatimeapp.utils.PermissionsUtil;
@@ -39,7 +39,6 @@ import com.google.firebase.auth.FirebaseUser;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 
 public class ConversationsFragment extends Fragment {
@@ -75,6 +74,13 @@ public class ConversationsFragment extends Fragment {
                 }
             }
     );
+    private final Observer<User> userObserver = new Observer<>() {
+        @Override
+        public void onChanged(User user) {
+            binding.setModel(user);
+            viewModel.getChats();
+        }
+    };
     private final Observer<ArrayList<Chat>> chatsObserver = new Observer<>() {
         @Override
         public void onChanged(ArrayList<Chat> chats) {
@@ -103,7 +109,6 @@ public class ConversationsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentConversationsBinding.inflate(inflater, container, false);
-        binding.setModel(viewModel.getUser());
         return binding.getRoot();
     }
 
@@ -111,14 +116,14 @@ public class ConversationsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
-        viewModel.getChats();
+        viewModel.getUserLiveData().observe(getViewLifecycleOwner(), userObserver);
         viewModel.getChatsLiveData().observe(getViewLifecycleOwner(), chatsObserver);
         viewModel.getChatLiveData().observe(getViewLifecycleOwner(), chatObserver);
         initViews();
     }
 
     private void initViews() {
-        adapter = new ConversationsAdapter(chatsList, callbackChat);
+        adapter = new ConversationsAdapter(chatsList,viewModel.getCurrentUserUid(), callbackChat);
         binding.chatsRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         binding.chatsRecyclerView.setAdapter(adapter);
         binding.chatsBtnAdd.setOnClickListener(v -> onPlusClicked());
@@ -216,11 +221,13 @@ public class ConversationsFragment extends Fragment {
         Chat chat = new Chat(
                 ChatIdGenerator.generateChatId(currentUser.getPhoneNumber(), phoneNumber),
                 currentUser.getUid(), // me
-                "", // contact
-                viewModel.getUser().getName(), // me
+                "", // contact, later
+                viewModel.getCurrentUser().getName(), // me
                 contactName, // contact
                 new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(new Date()),
-                new ArrayList<>()
+                new ArrayList<>(),
+                viewModel.getCurrentUser().getProfileImage(), // me
+                "" // contact, later
         );
         viewModel.getContactUserIfExistAndAddChat(chat, phoneNumber);
     }

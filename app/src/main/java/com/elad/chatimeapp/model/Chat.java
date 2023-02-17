@@ -16,10 +16,12 @@ public class Chat implements Serializable {
     private String userName2;
     private String date;
     private ArrayList<Message> messages;
+    private String profileImage1;
+    private String profileImage2;
 
     public Chat() {}
 
-    public Chat(String chatId, String uid1, String uid2, String userName1, String userName2, String date, ArrayList<Message> messages) {
+    public Chat(String chatId, String uid1, String uid2, String userName1, String userName2, String date, ArrayList<Message> messages, String profileImage1, String profileImage2) {
         this.chatId = chatId;
         this.uid1 = uid1;
         this.uid2 = uid2;
@@ -27,6 +29,8 @@ public class Chat implements Serializable {
         this.userName2 = userName2;
         this.date = date;
         this.messages = messages;
+        this.profileImage1 = profileImage1;
+        this.profileImage2 = profileImage2;
     }
 
     public String getChatId() {
@@ -87,5 +91,21 @@ public class Chat implements Serializable {
 
     public void addMessage(Message message) {
         messages.add(message);
+    }
+
+    public String getProfileImage1() {
+        return profileImage1;
+    }
+
+    public void setProfileImage1(String profileImage1) {
+        this.profileImage1 = profileImage1;
+    }
+
+    public String getProfileImage2() {
+        return profileImage2;
+    }
+
+    public void setProfileImage2(String profileImage2) {
+        this.profileImage2 = profileImage2;
     }
 }

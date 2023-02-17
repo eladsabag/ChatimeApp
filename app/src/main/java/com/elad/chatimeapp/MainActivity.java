@@ -4,6 +4,7 @@ import static com.elad.chatimeapp.utils.Util.openHtmlTextDialog;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -23,25 +24,33 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
+    private ActivityMainBinding binding;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.my_nav_host_fragment);
         if (navHostFragment == null) return;
-        NavController navController = navHostFragment.getNavController();
+        navController = navHostFragment.getNavController();
 
         navController.addOnDestinationChangedListener(onDestinationChangedListener);
 
-        initSupportActionBarView();
+        setSupportActionBar(binding.toolbar);
+
+        if (getSupportActionBar() != null) getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        initToolbarNavigation();
     }
 
-    private void initSupportActionBarView() {
-        if (getSupportActionBar() == null) return;
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.primaryColor)));
+    private void initToolbarNavigation() {
+        binding.toolbarNavigation.setOnClickListener(v -> {
+            if (navController.getCurrentDestination() != null && navController.getCurrentDestination().getId() != R.id.main_dest)
+                navController.popBackStack();
+        });
     }
 
     @Override
@@ -67,11 +76,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private final NavController.OnDestinationChangedListener onDestinationChangedListener = (navController, navDestination, bundle) -> {
-        if (getSupportActionBar() == null) return;
-        if (navDestination.getId() == R.id.splash_dest) {
-            getSupportActionBar().hide();
-            return;
-        }
-        getSupportActionBar().show();
+        binding.setShowToolbar(navDestination.getId() != R.id.splash_dest);
+        binding.setShowArrow(navDestination.getId() != R.id.main_dest);
     };
 }

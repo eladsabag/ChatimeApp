@@ -14,16 +14,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.elad.chatimeapp.R;
-import com.elad.chatimeapp.screens.SharedViewModel;
+import com.elad.chatimeapp.screens.SplashViewModel;
 
 public class SplashFragment extends Fragment {
-    private SharedViewModel viewModel;
+    private SplashViewModel viewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        viewModel.resetUser();
+        viewModel = new ViewModelProvider(requireActivity()).get(SplashViewModel.class);
     }
 
     @Override

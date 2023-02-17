@@ -55,37 +55,24 @@
                     android:contentDescription="@string/app_name" />
             </com.google.android.material.card.MaterialCardView>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:padding="8dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{model.status}"
-                    android:textSize="16sp"
-                    tools:text="Available" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{model.name}"
-                    android:textSize="20sp"
-                    tools:text="Elad Sabag" />
-
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/settings_btn_edit"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@drawable/edit"
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{model.name}"
+                android:paddingHorizontal="8dp"
+                android:textSize="20sp"
                 android:layout_gravity="center_vertical"
-                android:clickable="true"
-                android:focusable="true"/>
+                tools:text="Elad Sabag" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{model.status}"
+                android:paddingHorizontal="8dp"
+                android:layout_gravity="center_vertical"
+                android:textSize="16sp"
+                tools:text="Available" />
+
         </LinearLayout>
 
         <View

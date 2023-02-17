@@ -8,6 +8,9 @@
         <variable
             name="model"
             type="com.elad.chatimeapp.model.Chat" />
+        <variable
+            name="currentUserUid"
+            type="String" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -34,6 +37,7 @@
                     android:id="@+id/contact_profile_image"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
+                    app:profileImage="@{model.uid1.equalsIgnoreCase(currentUserUid) ? model.profileImage1 : model.profileImage2}"
                     android:layout_marginHorizontal="12dp"
                     android:src="@drawable/male"
                     android:contentDescription="@string/app_name" />
@@ -43,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="Elad Sabag"
-                    android:text="@{model.userName2}"
+                    android:text="@{model.uid1.equalsIgnoreCase(currentUserUid) ? model.userName1 : model.userName2}"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:layout_gravity="center"/>

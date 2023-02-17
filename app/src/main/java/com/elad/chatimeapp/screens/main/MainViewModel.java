@@ -11,7 +11,6 @@ import com.elad.chatimeapp.data.firebase.DatabaseRepository;
 import com.elad.chatimeapp.model.Chat;
 import com.elad.chatimeapp.model.Message;
 import com.elad.chatimeapp.model.User;
-import com.elad.chatimeapp.screens.main.tabs_fragments.conversations.ConversationsAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -28,27 +27,40 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class MainViewModel extends ViewModel {
     private static final String TAG = "MainViewModel";
-    private User user;
+    private User currentUser;
     private final FirebaseAuth mAuth;
     private final DatabaseRepository repository;
     private final MutableLiveData<ArrayList<Chat>> chatsLiveData;
     private final MutableLiveData<Chat> chatLiveData;
+    private final MutableLiveData<User> userLiveData;
 
     @Inject
     public MainViewModel(FirebaseAuth mAuth, DatabaseRepository repository) {
         this.mAuth = mAuth;
         this.repository = repository;
-        this.user = new User();
+        this.currentUser = new User();
         this.chatsLiveData = new MutableLiveData<>();
         this.chatLiveData = new MutableLiveData<>();
+        this.userLiveData = new MutableLiveData<>();
     }
 
-    public User getUser() {
-        return user;
+    public void getUserFromDB() {
+        repository.getUser(getCurrentUserUid(), new DatabaseRepository.OnUserDataChangedListener() {
+            @Override
+            public void onUserDataChanged(User user) {
+                currentUser = user;
+                userLiveData.postValue(currentUser);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e(TAG, e.getMessage());
+            }
+        });
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public User getCurrentUser() {
+        return currentUser;
     }
 
     public void logout(NavController navController) {
@@ -61,18 +73,33 @@ public class MainViewModel extends ViewModel {
             @Override
             public void onUserIdRetrieved(String uid) {
                 Log.i(TAG, "onUserIdRetrieved");
-
-                // the rest of the properties suppose to be set earlier
                 chat.setUid2(uid);
-
-                addChat(chat);
+                repository.getUserProfileImageById(uid, new DatabaseRepository.OnUserRetrievedListener() {
+                    @Override
+                    public void onUserIdRetrieved(String uid) {}
+                    @Override
+                    public void onUserIdRetrievalFailed(String errorMessage) {}
+                    @Override
+                    public void onUserProfileImageRetrieved(String profileImage) {
+                        chat.setProfileImage2(profileImage);
+                        addChat(chat);
+                    }
+                    @Override
+                    public void onUserProfileImageRetrievalFailed(String errorMessage) {
+                        Log.e(TAG, errorMessage);
+                        addChat(chat);
+                    }
+                });
             }
-
             @Override
             public void onUserIdRetrievalFailed(String errorMessage) {
                 Log.e(TAG, errorMessage);
                 addChat(chat);
             }
+            @Override
+            public void onUserProfileImageRetrieved(String profileImage) {}
+            @Override
+            public void onUserProfileImageRetrievalFailed(String errorMessage) {}
         });
     }
 
@@ -87,9 +114,9 @@ public class MainViewModel extends ViewModel {
                     public void onChatAdded(Chat chat) {
                         Log.i(TAG, "onChatAdded");
 
-                        HashMap<String, Boolean> chatsHashMap = user.getChats();
+                        HashMap<String, Boolean> chatsHashMap = currentUser.getChats();
                         chatsHashMap.put(chat.getChatId(), chat.getUid2() != null && !chat.getUid2().isEmpty());
-                        user.setChats(chatsHashMap);
+                        currentUser.setChats(chatsHashMap);
 
                         chatLiveData.postValue(chat);
                     }
@@ -106,7 +133,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public void getChats() {
-        repository.getChatsByChatIds(user.getChats(), new DatabaseRepository.OnChatsRetrievedListener() {
+        repository.getChatsByChatIds(currentUser.getChats(), new DatabaseRepository.OnChatsRetrievedListener() {
             @Override
             public void onChatsRetrieved(ArrayList<Chat> chats) {
                 chatsLiveData.postValue(chats != null ? chats : new ArrayList<>());
@@ -124,11 +151,19 @@ public class MainViewModel extends ViewModel {
         return mAuth;
     }
 
+    public String getCurrentUserUid() {
+        return mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : "";
+    }
+
     public MutableLiveData<ArrayList<Chat>> getChatsLiveData() {
         return chatsLiveData;
     }
 
     public MutableLiveData<Chat> getChatLiveData() {
         return chatLiveData;
+    }
+
+    public MutableLiveData<User> getUserLiveData() {
+        return userLiveData;
     }
 }

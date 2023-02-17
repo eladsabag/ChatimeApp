@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
@@ -14,13 +15,13 @@ import android.view.ViewGroup;
 
 import com.elad.chatimeapp.R;
 import com.elad.chatimeapp.databinding.FragmentMainBinding;
-import com.elad.chatimeapp.screens.SharedViewModel;
+import com.elad.chatimeapp.model.User;
+import com.elad.chatimeapp.screens.SplashViewModel;
 import com.elad.chatimeapp.screens.main.tabs_fragments.conversations.ConversationsFragment;
 import com.elad.chatimeapp.screens.main.tabs_fragments.settings.SettingsFragment;
 import com.google.android.material.tabs.TabLayout;
 
 public class MainFragment extends Fragment {
-    private SharedViewModel sharedViewModel;
     private MainViewModel viewModel;
     private FragmentMainBinding binding;
     private final TabLayout.OnTabSelectedListener onTabSelectedListener = new TabLayout.OnTabSelectedListener() {
@@ -46,8 +47,6 @@ public class MainFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        viewModel.setUser(sharedViewModel.getCurrentUser());
     }
 
     @Override
@@ -59,6 +58,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        viewModel.getUserFromDB();
         initViews();
     }
 

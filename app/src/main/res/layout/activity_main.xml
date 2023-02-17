@@ -6,12 +6,40 @@
 
     <data>
         <import type="android.view.View" />
+        <variable
+            name="showToolbar"
+            type="boolean" />
+        <variable
+            name="showArrow"
+            type="boolean" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:background="@color/primaryColor"
+            android:visibility="@{showToolbar ? View.VISIBLE : View.GONE}"
+            tools:visibility="visible"
+            android:elevation="4dp"
+            app:menu="@menu/toolbar_menu"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/toolbar_navigation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                tools:src="@drawable/ic_arrow_back_scaled"
+                android:src="@{showArrow ? @drawable/ic_arrow_back_scaled : @drawable/chatime_logo_24}"/>
+        </androidx.appcompat.widget.Toolbar>
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/my_nav_host_fragment"

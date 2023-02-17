@@ -112,7 +112,21 @@ public class DatabaseRepository {
         });
     }
 
+    public void getUserProfileImageById(String uid, OnUserRetrievedListener listener) {
+        mDatabase.getReference().child(USERS_NODE).child(uid).child("profileImage").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String profileImage = snapshot.getValue(String.class);
+                if (listener != null)
+                    listener.onUserProfileImageRetrieved(profileImage);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                listener.onUserProfileImageRetrievalFailed("Error retrieving user profile image: " + error.getMessage());
+            }
+        });
+    }
 
     public void getUser(String uid, final OnUserDataChangedListener listener) {
         mDatabase.getReference(USERS_NODE).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -249,7 +263,9 @@ public class DatabaseRepository {
     }
     public interface OnUserRetrievedListener {
         void onUserIdRetrieved(String uid);
+        void onUserProfileImageRetrieved(String profileImage);
         void onUserIdRetrievalFailed(String errorMessage);
+        void onUserProfileImageRetrievalFailed(String errorMessage);
     }
 
     public interface OnChatsRetrievedListener {
