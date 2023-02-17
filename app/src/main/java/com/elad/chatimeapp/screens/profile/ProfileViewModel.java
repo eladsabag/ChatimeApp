@@ -45,6 +45,7 @@ public class ProfileViewModel extends ViewModel {
 
     public void saveUser() {
         if (mAuth.getCurrentUser() != null) {
+            user.setPhoneNumber(mAuth.getCurrentUser().getPhoneNumber());
             repository.addUser(user, mAuth.getCurrentUser().getUid());
         }
     }

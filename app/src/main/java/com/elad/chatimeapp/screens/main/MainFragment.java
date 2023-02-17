@@ -1,7 +1,5 @@
 package com.elad.chatimeapp.screens.main;
 
-import static com.elad.chatimeapp.utils.Constants.USER_EXTRA;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,12 +14,10 @@ import android.view.ViewGroup;
 
 import com.elad.chatimeapp.R;
 import com.elad.chatimeapp.databinding.FragmentMainBinding;
-import com.elad.chatimeapp.model.User;
 import com.elad.chatimeapp.screens.SharedViewModel;
-import com.elad.chatimeapp.screens.main.tabs_fragments.chats.ChatsFragment;
+import com.elad.chatimeapp.screens.main.tabs_fragments.conversations.ConversationsFragment;
 import com.elad.chatimeapp.screens.main.tabs_fragments.settings.SettingsFragment;
 import com.google.android.material.tabs.TabLayout;
-import com.google.gson.Gson;
 
 public class MainFragment extends Fragment {
     private SharedViewModel sharedViewModel;
@@ -73,13 +69,13 @@ public class MainFragment extends Fragment {
 
     private void setInitialFragment() {
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.main_tabs_container, new ChatsFragment());
+        fragmentTransaction.add(R.id.main_tabs_container, new ConversationsFragment());
         fragmentTransaction.commit();
     }
 
     private void setFirstSelectionTab() {
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.main_tabs_container, new ChatsFragment());
+        fragmentTransaction.replace(R.id.main_tabs_container, new ConversationsFragment());
         fragmentTransaction.commit();
     }
 

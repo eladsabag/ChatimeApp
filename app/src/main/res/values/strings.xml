@@ -38,8 +38,10 @@
     <string name="status">Status</string>
     <string name="camera_permission_title">Camera Permissions Required</string>
     <string name="storage_permissions_title">Storage Permissions Required</string>
+    <string name="contact_permissions_title">Contact Permissions Required</string>
     <string name="camera_permission_message">In order to take picture with the camera feature,, your approval to this permission is required.</string>
     <string name="storage_permissions_message">In order to pick pictures from gallery, your approval to this permission is required.</string>
+    <string name="contact_permissions_message">In order to pick contact from phone, your approval to this permission is required.</string>
     <string name="name_required">Name is required field</string>
     <string name="gender_required">Gender is required field</string>
     <string name="status_required">Status is required field</string>

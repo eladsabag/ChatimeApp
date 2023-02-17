@@ -1,7 +1,6 @@
-package com.elad.chatimeapp.screens.main.tabs_fragments.chats;
+package com.elad.chatimeapp.screens.main.tabs_fragments.conversations;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -9,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.elad.chatimeapp.databinding.ChatListItemBinding;
 import com.elad.chatimeapp.model.Chat;
-import com.elad.chatimeapp.screens.main.MainViewModel;
 
 import java.util.ArrayList;
 
@@ -17,11 +15,11 @@ import java.util.ArrayList;
  * @author - Elad Sabag
  * @date - 2/10/2023
  */
-public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.MyViewHolder> {
+public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdapter.MyViewHolder> {
     private ArrayList<Chat> chatsList;
     private CallbackChat callbackChat;
 
-    public ChatsAdapter(ArrayList<Chat> chatsList, CallbackChat callbackChat) {
+    public ConversationsAdapter(ArrayList<Chat> chatsList, CallbackChat callbackChat) {
         this.chatsList = chatsList;
         this.callbackChat = callbackChat;
     }
@@ -32,13 +30,13 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.MyViewHolder
 
     @NonNull
     @Override
-    public ChatsAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ConversationsAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ChatListItemBinding binding = ChatListItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new MyViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChatsAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ConversationsAdapter.MyViewHolder holder, int position) {
         holder.bind(chatsList.get(position), callbackChat);
     }
 
@@ -55,6 +53,10 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.MyViewHolder
     public void updateList(ArrayList<Chat> chatsList) {
         this.chatsList = chatsList;
         notifyDataSetChanged();
+    }
+
+    public ArrayList<Chat> getChatsList() {
+        return chatsList;
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {

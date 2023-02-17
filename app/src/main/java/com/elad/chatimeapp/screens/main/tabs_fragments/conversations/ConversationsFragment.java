@@ -1,17 +1,19 @@
-package com.elad.chatimeapp.screens.main.tabs_fragments.chats;
+package com.elad.chatimeapp.screens.main.tabs_fragments.conversations;
 
+import static com.elad.chatimeapp.utils.Constants.CHAT_ID_EXTRA;
+
+import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,44 +26,69 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.elad.chatimeapp.R;
-import com.elad.chatimeapp.databinding.FragmentChatsBinding;
+import com.elad.chatimeapp.databinding.FragmentConversationsBinding;
+import com.elad.chatimeapp.dialogs.PermissionDialogFragment;
 import com.elad.chatimeapp.model.Chat;
-import com.elad.chatimeapp.model.User;
 import com.elad.chatimeapp.screens.main.MainViewModel;
 import com.elad.chatimeapp.utils.ChatIdGenerator;
+import com.elad.chatimeapp.utils.PermissionsUtil;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Locale;
 
-public class ChatsFragment extends Fragment {
-    private FragmentChatsBinding binding;
+public class ConversationsFragment extends Fragment {
+    private FragmentConversationsBinding binding;
     private ArrayList<Chat> chatsList;
-    private ChatsAdapter adapter;
+    private ConversationsAdapter adapter;
     private NavController navController;
     private MainViewModel viewModel;
     private Context context;
     private final ActivityResultLauncher<Void> contactLauncher = registerForActivityResult(
             new ActivityResultContracts.PickContact(),
-            new ActivityResultCallback<Uri>() {
-                @Override
-                public void onActivityResult(Uri uri) {
-                    if (uri != null) {
-                        getContactDetails(uri);
-                    }
+            uri -> {
+                if (uri != null) {
+                    getContactDetails(uri);
                 }
             }
     );
-    private final ChatsAdapter.CallbackChat callbackChat = new ChatsAdapter.CallbackChat() {
+    private final ConversationsAdapter.CallbackChat callbackChat = new ConversationsAdapter.CallbackChat() {
         @Override
         public void OnChatClicked(Chat chat) {
             Bundle bundle = new Bundle();
-            bundle.putSerializable("chat", chat);
-            navController.navigate(R.id.action_main_dest_to_conversation_dest, bundle);
+            bundle.putString(CHAT_ID_EXTRA, chat.getChatId());
+            navController.navigate(R.id.action_main_dest_to_chat_dest, bundle);
+        }
+    };
+    private final ActivityResultLauncher<String> requestContactPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            isGranted -> {
+                if (isGranted) {
+                    contactLauncher.launch(null);
+                } else {
+                    requestContactPermissionsWithRationaleCheck();
+                }
+            }
+    );
+    private final Observer<ArrayList<Chat>> chatsObserver = new Observer<>() {
+        @Override
+        public void onChanged(ArrayList<Chat> chats) {
+            adapter.updateList(chats);
+            chatsList = chats;
+        }
+    };
+    private final Observer<Chat> chatObserver = new Observer<>() {
+        @Override
+        public void onChanged(Chat chat) {
+            if (adapter != null && chat != null) {
+                adapter.addChat(chat);
+                chatsList = adapter.getChatsList();
+            }
         }
     };
 
@@ -70,11 +97,12 @@ public class ChatsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         context = requireContext();
         viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        chatsList = new ArrayList<>();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentChatsBinding.inflate(inflater, container, false);
+        binding = FragmentConversationsBinding.inflate(inflater, container, false);
         binding.setModel(viewModel.getUser());
         return binding.getRoot();
     }
@@ -83,19 +111,24 @@ public class ChatsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
-        chatsList = new ArrayList<>(viewModel.getUser().getChats().values());
-        adapter = new ChatsAdapter(chatsList, callbackChat);
+        viewModel.getChats();
+        viewModel.getChatsLiveData().observe(getViewLifecycleOwner(), chatsObserver);
+        viewModel.getChatLiveData().observe(getViewLifecycleOwner(), chatObserver);
         initViews();
     }
 
     private void initViews() {
+        adapter = new ConversationsAdapter(chatsList, callbackChat);
         binding.chatsRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         binding.chatsRecyclerView.setAdapter(adapter);
         binding.chatsBtnAdd.setOnClickListener(v -> onPlusClicked());
     }
 
     private void onPlusClicked() {
-//        navController.navigate(R.id.action_main_dest_to_contacts_dest);
+        if (!PermissionsUtil.hasReadContactsPermissions(requireContext())) {
+            PermissionsUtil.requestReadContactsPermissions(requestContactPermissionLauncher);
+            return;
+        }
         contactLauncher.launch(null);
     }
 
@@ -174,11 +207,34 @@ public class ChatsFragment extends Fragment {
 
     private void handleContact(String contactName, String phoneNumber) {
         FirebaseUser currentUser = viewModel.getmAuth().getCurrentUser();
-        // TODO prevent duplicate chats
-        if (currentUser != null) {
-            Chat chat = new Chat(ChatIdGenerator.generateChatId(currentUser.getPhoneNumber(), phoneNumber),contactName, "" ,"", new ArrayList<>());
-            viewModel.addChatToUser(chat, currentUser.getUid());
-            adapter.addChat(chat);
+        if (currentUser == null) return;
+
+        phoneNumber = phoneNumber
+                .replace("-","")
+                .replace(" ", "");
+
+        Chat chat = new Chat(
+                ChatIdGenerator.generateChatId(currentUser.getPhoneNumber(), phoneNumber),
+                currentUser.getUid(), // me
+                "", // contact
+                viewModel.getUser().getName(), // me
+                contactName, // contact
+                new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(new Date()),
+                new ArrayList<>()
+        );
+        viewModel.getContactUserIfExistAndAddChat(chat, phoneNumber);
+    }
+
+    private void requestContactPermissionsWithRationaleCheck() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.READ_CONTACTS)) {
+            new PermissionDialogFragment(getString(R.string.contact_permissions_title), getString(R.string.contact_permissions_message), new PermissionDialogFragment.PermissionDialogCallback() {
+                @Override
+                public void onConfirm() { PermissionsUtil.requestReadContactsPermissions(requestContactPermissionLauncher); }
+                @Override
+                public void onCancel() { PermissionsUtil.openPermissionsSettings(requireActivity()); }
+            }).show(getChildFragmentManager(), PermissionDialogFragment.TAG);
+        } else {
+            PermissionsUtil.openPermissionsSettings(requireActivity());
         }
     }
 }

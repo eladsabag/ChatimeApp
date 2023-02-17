@@ -6,13 +6,21 @@ package com.elad.chatimeapp.model;
  */
 public class Message {
     private String message;
-    private boolean isSentByMe;
+    private String senderUid;
 
     public Message() {}
 
-    public Message(String message, boolean isSentByMe) {
+    public Message(String senderUid, String message) {
+        this.senderUid = senderUid;
         this.message = message;
-        this.isSentByMe = isSentByMe;
+    }
+
+    public String getSenderUid() {
+        return senderUid;
+    }
+
+    public void setSenderUid(String senderUid) {
+        this.senderUid = senderUid;
     }
 
     public String getMessage() {
@@ -21,13 +29,5 @@ public class Message {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public boolean isSentByMe() {
-        return isSentByMe;
-    }
-
-    public void setSentByMe(boolean sentByMe) {
-        isSentByMe = sentByMe;
     }
 }

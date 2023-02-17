@@ -10,7 +10,7 @@
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/conversation"
+            android:id="@+id/chat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:listitem="@layout/conversation_list_item"/>
@@ -24,7 +24,7 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/conversation_edt"
+                android:id="@+id/chat_edt"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -35,9 +35,11 @@
                 android:autofillHints="" />
 
             <ImageView
+                android:id="@+id/chat_img_send"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:padding="4dp"
+                android:alpha="0.5"
+                android:padding="8dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:src="@drawable/ic_send_message"/>

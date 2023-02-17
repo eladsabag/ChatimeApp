@@ -9,29 +9,34 @@
         <variable
             name="model"
             type="com.elad.chatimeapp.model.Message" />
+        <variable
+            name="currentUserUid"
+            type="String" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="@{model.sentByMe ? Gravity.START : Gravity.END}">
+        android:gravity="@{model.senderUid.equalsIgnoreCase(currentUserUid) ? Gravity.START : Gravity.END}">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="128dp"
             android:layout_margin="8dp"
             app:cardCornerRadius="24dp"
-            app:cardBackgroundColor="@{model.sentByMe ? @color/primaryColor : @color/greyColor}"
+            app:cardBackgroundColor="@{model.senderUid.equalsIgnoreCase(currentUserUid) ? @color/primaryColor : @color/greyColor}"
             tools:cardBackgroundColor="@color/black">
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@{model.sentByMe ? @color/white : @color/black}"
+                android:textColor="@{model.senderUid.equalsIgnoreCase(currentUserUid) ? @color/white : @color/black}"
                 android:text="@{model.message}"
                 android:textSize="15sp"
                 tools:textColor="@color/white"
                 android:padding="12dp"
+                android:layout_gravity="center"
                 tools:text="hi how are you ?"/>
         </com.google.android.material.card.MaterialCardView>
     </RelativeLayout>

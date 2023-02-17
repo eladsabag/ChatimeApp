@@ -1,5 +1,7 @@
 package com.elad.chatimeapp.screens.otp;
 
+import static com.elad.chatimeapp.utils.Constants.FIRST_LOGIN;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,6 +24,7 @@ import com.elad.chatimeapp.R;
 import com.elad.chatimeapp.databinding.FragmentOtpAuthBinding;
 import com.elad.chatimeapp.dialogs.ErrorDialogFragment;
 import com.elad.chatimeapp.dialogs.LoadingDialogFragment;
+import com.elad.chatimeapp.utils.SharedPrefsUtil;
 
 public class OtpAuthFragment extends Fragment {
     private FragmentOtpAuthBinding binding;
@@ -36,7 +39,8 @@ public class OtpAuthFragment extends Fragment {
         public void onSignIn() {
             loadingDialogFragment.dismiss();
             sendAgainCountDown.cancel();
-            navController.navigate(R.id.action_otp_auth_dest_to_profile_dest);
+            boolean isFirstLogin = SharedPrefsUtil.getInstance().getBooleanFromSP(FIRST_LOGIN, true);
+            navController.navigate(isFirstLogin ? R.id.action_otp_auth_dest_to_profile_dest : R.id.action_profile_dest_to_splash_dest);
         }
 
         @Override

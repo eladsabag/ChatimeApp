@@ -20,11 +20,13 @@ import android.widget.CompoundButton;
 import com.elad.chatimeapp.R;
 import com.elad.chatimeapp.databinding.FragmentSettingsBinding;
 import com.elad.chatimeapp.model.User;
+import com.elad.chatimeapp.screens.SharedViewModel;
 import com.elad.chatimeapp.screens.main.MainViewModel;
 import com.elad.chatimeapp.utils.SharedPrefsUtil;
 
 public class SettingsFragment extends Fragment {
     private MainViewModel viewModel;
+    private SharedViewModel sharedViewModel;
     private FragmentSettingsBinding binding;
     private NavController navController;
 
@@ -32,6 +34,7 @@ public class SettingsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
     }
 
     @Override
@@ -50,6 +53,11 @@ public class SettingsFragment extends Fragment {
 
     private void initViews() {
         binding.settingsSwitchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> SharedPrefsUtil.getInstance().putBooleanToSP(NOTIFICATION_ON, isChecked));
-        binding.settingsBtnLogout.setOnClickListener(v -> viewModel.logout(navController));
+        binding.settingsBtnLogout.setOnClickListener(v -> onLogoutClicked());
+    }
+
+    private void onLogoutClicked() {
+        sharedViewModel.resetUser();
+        viewModel.logout(navController);
     }
 }

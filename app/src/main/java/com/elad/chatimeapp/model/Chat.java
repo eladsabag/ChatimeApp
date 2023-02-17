@@ -2,42 +2,71 @@ package com.elad.chatimeapp.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * @author - Elad Sabag
  * @date - 1/27/2023
  */
 public class Chat implements Serializable {
-    private String id;
-    private String name;
+    private String chatId;
+    private String uid1;
+    private String uid2;
+    private String userName1;
+    private String userName2;
     private String date;
-    private String profileImage;
     private ArrayList<Message> messages;
 
     public Chat() {}
 
-    public Chat(String id, String name, String date, String profileImage, ArrayList<Message> messages) {
-        this.id = id;
-        this.name = name;
+    public Chat(String chatId, String uid1, String uid2, String userName1, String userName2, String date, ArrayList<Message> messages) {
+        this.chatId = chatId;
+        this.uid1 = uid1;
+        this.uid2 = uid2;
+        this.userName1 = userName1;
+        this.userName2 = userName2;
         this.date = date;
-        this.profileImage = profileImage;
         this.messages = messages;
     }
 
-    public String getId() {
-        return id;
+    public String getChatId() {
+        return chatId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
     }
 
-    public String getName() {
-        return name;
+    public String getUid1() {
+        return uid1;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUid1(String uid1) {
+        this.uid1 = uid1;
+    }
+
+    public String getUid2() {
+        return uid2;
+    }
+
+    public void setUid2(String uid2) {
+        this.uid2 = uid2;
+    }
+
+    public String getUserName1() {
+        return userName1;
+    }
+
+    public void setUserName1(String userName1) {
+        this.userName1 = userName1;
+    }
+
+    public String getUserName2() {
+        return userName2;
+    }
+
+    public void setUserName2(String userName2) {
+        this.userName2 = userName2;
     }
 
     public String getDate() {
@@ -48,14 +77,6 @@ public class Chat implements Serializable {
         this.date = date;
     }
 
-    public String getProfileImage() {
-        return profileImage;
-    }
-
-    public void setProfileImage(String profileImage) {
-        this.profileImage = profileImage;
-    }
-
     public ArrayList<Message> getMessages() {
         return messages;
     }
@@ -64,13 +85,7 @@ public class Chat implements Serializable {
         this.messages = messages;
     }
 
-    @Override
-    public String toString() {
-        return "Chat{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", date='" + date + '\'' +
-                ", profileImage='" + profileImage + '\'' +
-                '}';
+    public void addMessage(Message message) {
+        messages.add(message);
     }
 }

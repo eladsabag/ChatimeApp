@@ -69,4 +69,8 @@ public class SharedViewModel extends ViewModel {
     public User getCurrentUser() {
         return currentUser;
     }
+
+    public void resetUser() {
+        this.currentUser = new User();
+    }
 }

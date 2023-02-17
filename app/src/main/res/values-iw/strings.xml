@@ -31,8 +31,10 @@
     <string name="status">Status</string>
     <string name="camera_permission_title">הרשאות מצלמה דרושות</string>
     <string name="storage_permissions_title">הרשאות אחסון דרושות</string>
+    <string name="contact_permissions_title">הרשאות אנשי קשר דרושות</string>
     <string name="camera_permission_message">על מנת לצלם תמונה בעזרת המצלמה, יש צורך אישור שלך עבור ההרשאה הזו.</string>
     <string name="storage_permissions_message">על מנת לבחור תמונות מהגלריה, האישור שלך עבור ההרשאות האלו.</string>
+    <string name="contact_permissions_message">על מנת לבחור איש קשר מהפלאפון, האישור שלך עבור ההרשאות האלו.</string>
     <string name="name_required">שם זה שדה דרוש</string>
     <string name="gender_required">מין זה שדה דרוש</string>
     <string name="status_required">סטטוס זה שדה דרוש</string>

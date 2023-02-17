@@ -1,13 +1,8 @@
 package com.elad.chatimeapp.model;
 
-import android.graphics.Bitmap;
-
-import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
-
 import com.elad.chatimeapp.BR;
-
 import java.io.Serializable;
 import java.util.HashMap;
 
@@ -20,15 +15,17 @@ public class User extends BaseObservable implements Serializable {
     private String profileImage; // base 64 encoded image string
     private String status;
     private String gender;
-    private HashMap<String, Chat> chats = new HashMap<>();
+    private String phoneNumber;
+    private HashMap<String, Boolean> chats = new HashMap<>();
 
     public User() {}
 
-    public User(String name, String profileImage, String status, String gender, HashMap<String, Chat> chats) {
+    public User(String name, String profileImage, String status, String gender, String phoneNumber, HashMap<String, Boolean> chats) {
         this.name = name;
         this.profileImage = profileImage;
         this.status = status;
         this.gender = gender;
+        this.phoneNumber = phoneNumber;
         this.chats = chats;
     }
 
@@ -72,12 +69,20 @@ public class User extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.gender);
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     @Bindable
-    public HashMap<String, Chat> getChats() {
+    public HashMap<String, Boolean> getChats() {
         return chats;
     }
 
-    public void setChats(HashMap<String, Chat> chats) {
+    public void setChats(HashMap<String, Boolean> chats) {
         this.chats = chats;
         notifyPropertyChanged(BR.chats);
     }
@@ -88,16 +93,5 @@ public class User extends BaseObservable implements Serializable {
         setProfileImage(user.getProfileImage());
         setStatus(user.getStatus());
         setChats(user.getChats());
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
-                ", status='" + status + '\'' +
-                ", gender='" + gender + '\'' +
-                ", chats=" + chats.toString() +
-                '}';
     }
 }

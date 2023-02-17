@@ -135,6 +135,19 @@ public class PermissionsUtil {
     }
 
     /**
+     * This function check if the user has read contacts permissions.
+     * The permissions: READ_CONTACTS
+     * @param context - The context is required in order to execute the permissions check.
+     * @return true if has read contacts permissions else false
+     */
+    public static boolean hasReadContactsPermissions(Context context) {
+        return ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.READ_CONTACTS
+        ) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    /**
      * This function check if the user has body sensors permission.
      * The permission: BODY_SENSORS
      * @param context - The context is required in order to execute the permissions check.
@@ -264,6 +277,16 @@ public class PermissionsUtil {
                 Manifest.permission.WRITE_CONTACTS
         });
     }
+
+    /**
+     * This function request for read contacts permission.
+     * The permission: READ_CONTACTS
+     * @param permissionLauncher - The launcher that suppose to execute the request.
+     */
+    public static void requestReadContactsPermissions(final ActivityResultLauncher<String> permissionLauncher) {
+        permissionLauncher.launch(Manifest.permission.READ_CONTACTS);
+    }
+
 
     /**
      * This function request for body sensors permission.
