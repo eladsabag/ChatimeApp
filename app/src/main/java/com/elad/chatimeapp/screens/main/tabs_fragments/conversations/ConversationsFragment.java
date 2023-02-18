@@ -32,7 +32,7 @@ import com.elad.chatimeapp.dialogs.PermissionDialogFragment;
 import com.elad.chatimeapp.model.Chat;
 import com.elad.chatimeapp.model.User;
 import com.elad.chatimeapp.screens.main.MainViewModel;
-import com.elad.chatimeapp.utils.ChatIdGenerator;
+import com.elad.chatimeapp.utils.HashUtil;
 import com.elad.chatimeapp.utils.PermissionsUtil;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -219,7 +219,7 @@ public class ConversationsFragment extends Fragment {
                 .replace(" ", "");
 
         Chat chat = new Chat(
-                ChatIdGenerator.generateChatId(currentUser.getPhoneNumber(), phoneNumber),
+                HashUtil.generateChatId(currentUser.getPhoneNumber(), phoneNumber),
                 currentUser.getUid(), // me
                 "", // contact, later
                 viewModel.getCurrentUser().getName(), // me

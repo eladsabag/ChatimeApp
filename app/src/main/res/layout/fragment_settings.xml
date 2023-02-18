@@ -22,7 +22,6 @@
             android:layout_height="wrap_content"
             android:paddingVertical="36dp"
             android:text="@string/settings"
-            android:textColor="@color/black"
             android:layout_gravity="center_horizontal"
             android:textStyle="bold"
             android:textSize="42sp" />

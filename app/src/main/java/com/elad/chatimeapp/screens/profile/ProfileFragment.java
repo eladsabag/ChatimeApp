@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -74,6 +75,16 @@ public class ProfileFragment extends Fragment {
             new ActivityResultContracts.RequestMultiplePermissions(),
             isGranted -> {
                 if (PermissionsUtil.checkIfAllPermissionsGranted(isGranted)) {
+                    launchGallery();
+                } else {
+                    requestPermissionsWithRationaleCheck(false);
+                }
+            }
+    );
+    private final ActivityResultLauncher<String> readMediaImagesLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            isGranted -> {
+                if (isGranted) {
                     launchGallery();
                 } else {
                     requestPermissionsWithRationaleCheck(false);
@@ -228,8 +239,15 @@ public class ProfileFragment extends Fragment {
                     public void onConfirm() {
                         if (isCamera)
                             PermissionsUtil.requestCameraPermission(cameraPermissionLauncher);
-                        else // read external
-                            PermissionsUtil.requestStoragePermissions(storagePermissionsLauncher);
+                        else {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                // Android 13+
+                                PermissionsUtil.requestReadMediaImagesPermission(readMediaImagesLauncher);
+                            } else {
+                                // Android 12-
+                                PermissionsUtil.requestStoragePermissions(storagePermissionsLauncher);
+                            }
+                        }
                     }
 
                     @Override
@@ -253,10 +271,18 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onGallery() {
-                if (!PermissionsUtil.hasStoragePermissions(requireContext())) {
-                    PermissionsUtil.requestStoragePermissions(storagePermissionsLauncher);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    if (!PermissionsUtil.hasStoragePermissions(requireContext())) {
+                        PermissionsUtil.requestReadMediaImagesPermission(readMediaImagesLauncher);
+                    } else {
+                        launchGallery();
+                    }
                 } else {
-                    launchGallery();
+                    if (!PermissionsUtil.hasStoragePermissions(requireContext())) {
+                        PermissionsUtil.requestStoragePermissions(storagePermissionsLauncher);
+                    } else {
+                        launchGallery();
+                    }
                 }
             }
         }).show(getChildFragmentManager(), ImagePickerDialogFragment.TAG);

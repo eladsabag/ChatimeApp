@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@{model.senderUid.equalsIgnoreCase(currentUserUid) ? @color/white : @color/black}"
-                android:text="@{model.message}"
+                app:messageText="@{model.message}"
                 android:textSize="15sp"
                 tools:textColor="@color/white"
                 android:padding="12dp"

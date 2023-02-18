@@ -31,6 +31,9 @@ public class DatabaseRepository {
     private static final String TAG = "DatabaseRepository";
     private static final String USERS_NODE = "users";
     private static final String CHATS_NODE = "chats";
+    private static final String CHILD_MESSAGES = "messages";
+    private static final String CHILD_PROFILE_IMAGE = "profileImage";
+    private static final String CHILD_PHONE_NUMBER = "phoneNumber";
     private final FirebaseDatabase mDatabase;
 
     @Inject
@@ -80,7 +83,7 @@ public class DatabaseRepository {
     }
 
     public void addMessagesToChat(String chatId, ArrayList<Message> messages) {
-        mDatabase.getReference(CHATS_NODE).child(chatId).child("messages").setValue(messages);
+        mDatabase.getReference(CHATS_NODE).child(chatId).child(CHILD_MESSAGES).setValue(messages);
     }
 
 
@@ -92,7 +95,7 @@ public class DatabaseRepository {
                 if (snapshot.exists()) {
                     // Loop through the snapshot to find the user with the matching phone number
                     for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                        String userPhoneNumber = childSnapshot.child("phoneNumber").getValue(String.class);
+                        String userPhoneNumber = childSnapshot.child(CHILD_PHONE_NUMBER).getValue(String.class);
                         Log.d(TAG, userPhoneNumber + " " + phoneNumber);
                         if (userPhoneNumber != null && userPhoneNumber.equals(phoneNumber)) {
                             String uid = childSnapshot.getKey();
@@ -113,7 +116,7 @@ public class DatabaseRepository {
     }
 
     public void getUserProfileImageById(String uid, OnUserRetrievedListener listener) {
-        mDatabase.getReference().child(USERS_NODE).child(uid).child("profileImage").addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.getReference().child(USERS_NODE).child(uid).child(CHILD_PROFILE_IMAGE).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String profileImage = snapshot.getValue(String.class);
@@ -191,7 +194,7 @@ public class DatabaseRepository {
     }
 
     public void listenToSingleChatMessagesUpdates(String chatId, final OnChatDataChangedListener listener) {
-        mDatabase.getReference(CHATS_NODE).child(chatId).child("messages").addValueEventListener(new ValueEventListener() {
+        mDatabase.getReference(CHATS_NODE).child(chatId).child(CHILD_MESSAGES).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ArrayList<Message> arrayList = new ArrayList<>();
@@ -209,43 +212,6 @@ public class DatabaseRepository {
                     listener.onError(databaseError.toException());
             }
         });
-    }
-
-    public void listenForChatUpdates(String chatId, final OnChatDataChangedListener listener) {
-        mDatabase.getReference(CHATS_NODE).child(chatId)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        Chat chat = dataSnapshot.getValue(Chat.class);
-                        if (listener != null)
-                            listener.onChatAdded(chat);
-                    }
-
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        Chat chat = dataSnapshot.getValue(Chat.class);
-                        if (listener != null)
-                            listener.onChatChanged(chat);
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                        Chat chat = dataSnapshot.getValue(Chat.class);
-                        if (listener != null)
-                            listener.onChatRemoved(chat);
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        // Not needed for this example
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        if (listener != null)
-                            listener.onError(databaseError.toException());
-                    }
-                });
     }
 
     public interface OnUserDataChangedListener {

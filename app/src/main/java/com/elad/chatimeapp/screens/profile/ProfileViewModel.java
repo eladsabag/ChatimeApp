@@ -24,13 +24,6 @@ public class ProfileViewModel extends ViewModel {
     private final DatabaseRepository repository;
     private User user;
     private final MutableLiveData<User> userMutableLiveData;
-    private final DatabaseRepository.OnUserDataChangedListener onUserDataChangedListener = new DatabaseRepository.OnUserDataChangedListener() {
-        @Override
-        public void onUserDataChanged(User user) { userMutableLiveData.postValue(user); }
-
-        @Override
-        public void onError(Exception e) { Log.d(TAG, e.getMessage()); }
-    };
 
     @Inject
     public ProfileViewModel(FirebaseAuth mAuth, DatabaseRepository repository) {
@@ -38,7 +31,22 @@ public class ProfileViewModel extends ViewModel {
         this.repository = repository;
         this.userMutableLiveData = new MutableLiveData<>();
         this.user = new User();
+        getUserFromDB();
+    }
+
+    private void getUserFromDB() {
         if (mAuth.getCurrentUser() != null) {
+            DatabaseRepository.OnUserDataChangedListener onUserDataChangedListener = new DatabaseRepository.OnUserDataChangedListener() {
+                @Override
+                public void onUserDataChanged(User user) {
+                    userMutableLiveData.postValue(user);
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.d(TAG, e.getMessage());
+                }
+            };
             repository.getUser(mAuth.getUid(), onUserDataChangedListener);
         }
     }
