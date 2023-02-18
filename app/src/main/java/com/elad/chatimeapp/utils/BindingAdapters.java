@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
+import com.elad.chatimeapp.BuildConfig;
 import com.elad.chatimeapp.R;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textview.MaterialTextView;
@@ -79,6 +80,15 @@ public class BindingAdapters {
                 .load(bitmap != null ? bitmap : R.drawable.male)
                 .placeholder(R.drawable.male)
                 .into(view);
+    }
+
+    @BindingAdapter(value = {"messageText"}, requireAll = false)
+    public static void setMessageText(MaterialTextView view, String messageText) {
+        try {
+            view.setText(HashUtil.decrypt(messageText, BuildConfig.SECRET_KEY));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @BindingAdapter(value = {"filter", "text"}, requireAll = false)

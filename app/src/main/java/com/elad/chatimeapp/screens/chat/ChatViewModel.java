@@ -1,13 +1,16 @@
 package com.elad.chatimeapp.screens.chat;
 
+import android.os.Build;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.elad.chatimeapp.BuildConfig;
 import com.elad.chatimeapp.data.firebase.DatabaseRepository;
 import com.elad.chatimeapp.model.Chat;
 import com.elad.chatimeapp.model.Message;
+import com.elad.chatimeapp.utils.HashUtil;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -58,8 +61,13 @@ public class ChatViewModel extends ViewModel {
     }
 
     public void sendMessage(String chatId, Message message) {
-        currentChat.addMessage(message);
-        repository.addMessagesToChat(chatId, currentChat.getMessages());
+        try {
+            Message newMessage = new Message(message.getSenderUid(), HashUtil.encrypt(message.getMessage(), BuildConfig.SECRET_KEY));
+            currentChat.addMessage(newMessage);
+            repository.addMessagesToChat(chatId, currentChat.getMessages());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public MutableLiveData<Chat> getChatLiveData() {
