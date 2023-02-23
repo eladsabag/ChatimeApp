@@ -38,7 +38,10 @@ public class ChatFragment extends Fragment {
             if (chat.getMessages() != null) {
                 if (viewModel.getmAuth().getCurrentUser() != null) {
                     messageList = chat.getMessages();
-                    adapter.updateList(messageList);
+                    if (messageList.size() > 0) {
+                        adapter.addMessage(messageList.get(messageList.size() - 1));
+                        binding.chat.scrollToPosition(adapter.getItemCount() - 1);
+                    }
                 }
             }
         }

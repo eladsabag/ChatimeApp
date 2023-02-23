@@ -74,13 +74,6 @@ public class ConversationsFragment extends Fragment {
                 }
             }
     );
-    private final Observer<User> userObserver = new Observer<>() {
-        @Override
-        public void onChanged(User user) {
-            binding.setModel(user);
-            viewModel.getChats();
-        }
-    };
     private final Observer<ArrayList<Chat>> chatsObserver = new Observer<>() {
         @Override
         public void onChanged(ArrayList<Chat> chats) {
@@ -109,6 +102,7 @@ public class ConversationsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentConversationsBinding.inflate(inflater, container, false);
+        binding.setModel(viewModel.getCurrentUser());
         return binding.getRoot();
     }
 
@@ -116,7 +110,6 @@ public class ConversationsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
-        viewModel.getUserLiveData().observe(getViewLifecycleOwner(), userObserver);
         viewModel.getChatsLiveData().observe(getViewLifecycleOwner(), chatsObserver);
         viewModel.getChatLiveData().observe(getViewLifecycleOwner(), chatObserver);
         initViews();
@@ -243,5 +236,11 @@ public class ConversationsFragment extends Fragment {
         } else {
             PermissionsUtil.openPermissionsSettings(requireActivity());
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        viewModel.dismissChat();
     }
 }

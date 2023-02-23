@@ -30,7 +30,7 @@ public class ChatViewModel extends ViewModel {
     private final FirebaseAuth mAuth;
     private final DatabaseRepository repository;
     private final MutableLiveData<Chat> chatLiveData;
-    private Chat currentChat;
+    private final Chat currentChat;
 
     @Inject
     public ChatViewModel(FirebaseAuth mAuth, DatabaseRepository repository) {

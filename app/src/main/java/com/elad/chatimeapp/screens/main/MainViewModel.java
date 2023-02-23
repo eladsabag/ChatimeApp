@@ -11,6 +11,8 @@ import com.elad.chatimeapp.data.firebase.DatabaseRepository;
 import com.elad.chatimeapp.model.Chat;
 import com.elad.chatimeapp.model.Message;
 import com.elad.chatimeapp.model.User;
+import com.elad.chatimeapp.utils.Constants;
+import com.elad.chatimeapp.utils.SharedPrefsUtil;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -27,29 +29,27 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class MainViewModel extends ViewModel {
     private static final String TAG = "MainViewModel";
-    private User currentUser;
+    private final User currentUser;
     private final FirebaseAuth mAuth;
     private final DatabaseRepository repository;
     private final MutableLiveData<ArrayList<Chat>> chatsLiveData;
     private final MutableLiveData<Chat> chatLiveData;
-    private final MutableLiveData<User> userLiveData;
 
     @Inject
     public MainViewModel(FirebaseAuth mAuth, DatabaseRepository repository) {
         this.mAuth = mAuth;
         this.repository = repository;
-        this.currentUser = new User();
+        this.currentUser = SharedPrefsUtil.getInstance().getObject(Constants.USER, User.class);
         this.chatsLiveData = new MutableLiveData<>();
         this.chatLiveData = new MutableLiveData<>();
-        this.userLiveData = new MutableLiveData<>();
     }
 
-    public void getUserFromDB() {
-        repository.getUser(getCurrentUserUid(), new DatabaseRepository.OnUserDataChangedListener() {
+    public void listenToUserUpdates() {
+        repository.listenForUserUpdates(getCurrentUserUid(), new DatabaseRepository.OnUserDataChangedListener() {
             @Override
             public void onUserDataChanged(User user) {
-                currentUser = user;
-                userLiveData.postValue(currentUser);
+                currentUser.updateUser(user);
+                getChats();
             }
 
             @Override
@@ -63,43 +63,43 @@ public class MainViewModel extends ViewModel {
         return currentUser;
     }
 
-    public void logout(NavController navController) {
-        mAuth.signOut();
-        navController.navigate(R.id.action_main_fragment_to_splash_dest);
-    }
-
     public void getContactUserIfExistAndAddChat(Chat chat, String phoneNumber) {
         repository.getUserIdByPhoneNumber(phoneNumber, new DatabaseRepository.OnUserRetrievedListener() {
             @Override
             public void onUserIdRetrieved(String uid) {
                 Log.i(TAG, "onUserIdRetrieved");
                 chat.setUid2(uid);
-                repository.getUserProfileImageById(uid, new DatabaseRepository.OnUserRetrievedListener() {
-                    @Override
-                    public void onUserIdRetrieved(String uid) {}
-                    @Override
-                    public void onUserIdRetrievalFailed(String errorMessage) {}
-                    @Override
-                    public void onUserProfileImageRetrieved(String profileImage) {
-                        chat.setProfileImage2(profileImage);
-                        addChat(chat);
-                    }
-                    @Override
-                    public void onUserProfileImageRetrievalFailed(String errorMessage) {
-                        Log.e(TAG, errorMessage);
-                        addChat(chat);
-                    }
-                });
+                getUserChatProfileImage(uid, chat);
             }
             @Override
             public void onUserIdRetrievalFailed(String errorMessage) {
-                Log.e(TAG, errorMessage);
+                Log.e(TAG, "onUserIdRetrievalFailed: " + errorMessage);
                 addChat(chat);
             }
             @Override
             public void onUserProfileImageRetrieved(String profileImage) {}
             @Override
             public void onUserProfileImageRetrievalFailed(String errorMessage) {}
+        });
+    }
+
+    private void getUserChatProfileImage(String uid, Chat chat) {
+        repository.getUserProfileImageById(uid, new DatabaseRepository.OnUserRetrievedListener() {
+            @Override
+            public void onUserIdRetrieved(String uid) {}
+            @Override
+            public void onUserIdRetrievalFailed(String errorMessage) {}
+            @Override
+            public void onUserProfileImageRetrieved(String profileImage) {
+                Log.i(TAG, "onUserProfileImageRetrieved");
+                chat.setProfileImage2(profileImage);
+                addChat(chat);
+            }
+            @Override
+            public void onUserProfileImageRetrievalFailed(String errorMessage) {
+                Log.e(TAG, "onUserProfileImageRetrievalFailed" + errorMessage);
+                addChat(chat);
+            }
         });
     }
 
@@ -163,7 +163,12 @@ public class MainViewModel extends ViewModel {
         return chatLiveData;
     }
 
-    public MutableLiveData<User> getUserLiveData() {
-        return userLiveData;
+    public void dismissChat() {
+        chatLiveData.postValue(null);
+    }
+
+    public void logout(NavController navController) {
+        mAuth.signOut();
+        navController.navigate(R.id.action_main_fragment_to_splash_dest);
     }
 }

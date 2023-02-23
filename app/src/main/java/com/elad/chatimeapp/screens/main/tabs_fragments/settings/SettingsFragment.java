@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.elad.chatimeapp.databinding.FragmentSettingsBinding;
-import com.elad.chatimeapp.screens.SplashViewModel;
 import com.elad.chatimeapp.screens.main.MainViewModel;
 import com.elad.chatimeapp.utils.SharedPrefsUtil;
 

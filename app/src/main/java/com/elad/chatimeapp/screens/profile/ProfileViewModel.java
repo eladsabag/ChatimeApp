@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.elad.chatimeapp.data.firebase.DatabaseRepository;
 import com.elad.chatimeapp.model.User;
+import com.elad.chatimeapp.utils.Constants;
+import com.elad.chatimeapp.utils.SharedPrefsUtil;
 import com.google.firebase.auth.FirebaseAuth;
 
 import javax.inject.Inject;
@@ -30,7 +32,7 @@ public class ProfileViewModel extends ViewModel {
         this.mAuth = mAuth;
         this.repository = repository;
         this.userMutableLiveData = new MutableLiveData<>();
-        this.user = new User();
+        this.user = SharedPrefsUtil.getInstance().getObject(Constants.USER, User.class);
         getUserFromDB();
     }
 
