@@ -15,8 +15,8 @@ android {
         applicationId "com.elad.chatimeapp"
         minSdk 24
         targetSdk 33
-        versionCode 2
-        versionName "1.0.02"
+        versionCode 3
+        versionName "1.0.03"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
