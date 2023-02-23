@@ -183,6 +183,7 @@ public class ProfileFragment extends Fragment {
             viewModel.getUser().setName(name.toString());
             viewModel.getUser().setGender(gender.toString());
             viewModel.getUser().setStatus(status.toString());
+            if (viewModel.getUser().isFirstLogin()) viewModel.getUser().setFirstLogin(false);
 
             viewModel.saveUser();
 

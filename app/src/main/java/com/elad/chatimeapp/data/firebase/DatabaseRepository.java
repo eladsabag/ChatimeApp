@@ -175,7 +175,7 @@ public class DatabaseRepository {
     }
 
 
-    public void listenForUserUpdates(final OnUserDataChangedListener listener, String uid) {
+    public void listenForUserUpdates(String uid, final OnUserDataChangedListener listener) {
         mDatabase.getReference(USERS_NODE).child(uid)
                 .addValueEventListener(new ValueEventListener() {
                     @Override

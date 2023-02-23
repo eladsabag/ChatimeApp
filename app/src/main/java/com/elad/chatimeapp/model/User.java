@@ -16,16 +16,18 @@ public class User extends BaseObservable implements Serializable {
     private String status;
     private String gender;
     private String phoneNumber;
+    private boolean firstLogin = true;
     private HashMap<String, Boolean> chats = new HashMap<>();
 
     public User() {}
 
-    public User(String name, String profileImage, String status, String gender, String phoneNumber, HashMap<String, Boolean> chats) {
+    public User(String name, String profileImage, String status, String gender, String phoneNumber, boolean firstLogin, HashMap<String, Boolean> chats) {
         this.name = name;
         this.profileImage = profileImage;
         this.status = status;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
+        this.firstLogin = firstLogin;
         this.chats = chats;
     }
 
@@ -75,6 +77,14 @@ public class User extends BaseObservable implements Serializable {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public boolean isFirstLogin() {
+        return firstLogin;
+    }
+
+    public void setFirstLogin(boolean firstLogin) {
+        this.firstLogin = firstLogin;
     }
 
     @Bindable

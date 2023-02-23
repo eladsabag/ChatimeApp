@@ -13,21 +13,17 @@
         <action
             android:id="@+id/action_splash_dest_to_otp_send_fragment"
             app:destination="@id/otp_send_dest"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
             app:popUpTo="@id/splash_dest"
-            app:popUpToInclusive="false"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_splash_dest_to_main_fragment"
             app:destination="@id/main_dest"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
             app:popUpTo="@id/splash_dest"
-            app:popUpToInclusive="false"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_splash_dest_to_profile_dest"
+            app:destination="@id/profile_dest"
+            app:popUpTo="@id/splash_dest" />
     </fragment>
     <fragment
         android:id="@+id/otp_send_dest"
@@ -46,8 +42,8 @@
         android:label="fragment_otp_auth"
         tools:layout="@layout/fragment_otp_auth" >
         <action
-            android:id="@+id/action_otp_auth_dest_to_profile_dest"
-            app:destination="@id/profile_dest"
+            android:id="@+id/action_otp_auth_dest_to_splash_dest"
+            app:destination="@id/splash_dest"
             app:popUpTo="@id/otp_auth_dest"
             app:popUpToInclusive="true" />
     </fragment>

@@ -40,8 +40,7 @@ public class OtpAuthFragment extends Fragment {
             loadingDialogFragment.dismiss();
             sendAgainCountDown.cancel();
             boolean isFirstLogin = SharedPrefsUtil.getInstance().getBooleanFromSP(FIRST_LOGIN, true);
-            if (isFirstLogin) SharedPrefsUtil.getInstance().putBooleanToSP(FIRST_LOGIN, false);
-            navController.navigate(isFirstLogin ? R.id.action_otp_auth_dest_to_profile_dest : R.id.action_profile_dest_to_splash_dest);
+            navController.navigate(isFirstLogin ? R.id.action_otp_auth_dest_to_splash_dest : R.id.action_profile_dest_to_splash_dest);
         }
 
         @Override
